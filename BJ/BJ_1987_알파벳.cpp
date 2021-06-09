@@ -1,28 +1,43 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 
 using namespace std;
 
 int di[4] = { 0, 1, 0, -1 };
 int dj[4] = { 1, 0, -1, 0 };
+int R, C;
+int ans = 0;
 
-class que 
+vector <vector <char> > map;
+vector <int> visit;
+
+void dfs(int x, int y, int depth)
 {
-public:
-	int x;
-	int y;
-	vector <char> v;
-};
+	if (ans < depth)
+		ans = depth;
+
+	for (int i = 0; i < 4; i++)
+	{
+		int next_x = x + di[i];
+		int next_y = y + dj[i];
+
+		if (next_x < 0 || next_y < 0 || next_x >= R || next_y >= C)
+			continue;
+		
+		if (visit[map[next_x][next_y] - 65] == 0)
+		{
+			visit[map[next_x][next_y] - 65] = 1;
+			dfs(next_x, next_y, depth + 1);
+			visit[map[next_x][next_y] - 65] = 0;
+		}
+	}
+}
 
 int main()
 {
-	int R, C;
-
 	cin >> R >> C;
 
 	string s;
-	vector <vector <char> > map;
 	vector <char> map_temp;
 	for (int i = 0; i < R; i++)
 	{
@@ -36,61 +51,13 @@ int main()
 		map_temp.clear();
 	}
 
-	queue <que> q;
+	visit.assign(26, 0);
 
-	que tq;
-	tq.x = 0;
-	tq.y = 0;
-	tq.v.push_back(map[0][0]);
+	visit[map[0][0] - 65] = 1;
 
-	q.push(tq);
-
-	int ans = 0;
-
-	while (!q.empty())
-	{
-		int now_x = q.front().x;
-		int now_y = q.front().y;
-		vector <char> now_v = q.front().v;
-		q.pop();
-
-		if (ans < now_v.size())
-			ans = now_v.size();
-		
-		if (ans > now_v.size())
-			continue;
-
-
-		for (int i = 0; i < 4; i++)
-		{
-			int next_x = now_x + di[i];
-			int next_y = now_y + dj[i];
-
-			if (next_x < 0 || next_y < 0 || next_x >= R || next_y >= C)
-				continue;
-
-			int check = 0;
-			for (int j = 0; j < now_v.size(); j++)
-			{
-				if (map[next_x][next_y] == now_v[j])
-				{
-					check = 1;
-					break;
-				}
-			}
-			if (check == 1)
-				continue;
-
-			que next_q;
-			next_q.x = next_x;
-			next_q.y = next_y;
-			next_q.v = now_v;
-			next_q.v.push_back(map[next_x][next_y]);
-
-			q.push(next_q);
-		}
-	}
+	dfs(0, 0, 1);
 
 	cout << ans;
+
 
 }
