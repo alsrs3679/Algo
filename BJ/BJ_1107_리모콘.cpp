@@ -5,7 +5,7 @@ using namespace std;
 
 int N;
 int mi = 99999999;
-int ans = -1;
+int ans = 1000000;
 int channel = -1;
 vector <int> nums;
 
@@ -16,7 +16,7 @@ void permutation(int depth, int val)
 
 	if (val != -1)
 	{
-		if (abs(val - N) < mi)
+		if (abs(val - N) <= mi)
 		{
 			int temp = 1;
 			int temp_val = val;
@@ -30,7 +30,7 @@ void permutation(int depth, int val)
 				else
 					break;
 			}
-			if (ans > temp)
+			if (ans + mi > temp + abs(val - N))
 			{
 				mi = abs(val - N);
 				channel = val;
@@ -67,7 +67,7 @@ int main()
 
 	permutation(0, -1);
 
-	if(ans == -1)
+	if(ans == 1000000)
 		ans = abs(N - 100);
 	else
 	{
