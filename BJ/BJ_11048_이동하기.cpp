@@ -1,14 +1,20 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+#include <algorithm>
 
 using namespace std;
 
-struct que
+int find_max(int a, int b, int c)
 {
-	int r, c;
-	int cnt;
-};
+	vector <int> aa;
+	aa.push_back(a);
+	aa.push_back(b);
+	aa.push_back(c);
+
+	sort(aa.begin(), aa.end());
+
+	return aa[2];
+}
 
 int main()
 {
@@ -18,25 +24,29 @@ int main()
 	vector <vector <int> > map, sum;
 	vector <int> map_temp;
 	int temp;
-	for (int i = 0; i < N; i++)
+
+	map_temp.assign(M + 1, 0);
+	map.assign(N + 1, map_temp);
+	sum.assign(N + 1, map_temp);
+
+	for (int i = 1; i <= N; i++)
 	{
-		for (int j = 0; j < M; j++)
+		for (int j = 1; j <= M; j++)
 		{
 			cin >> temp;
-			map_temp.push_back(temp);
+			map_temp[j] = temp;
 		}
-		map.push_back(map_temp);
-		map_temp.clear();
+		map[i] = map_temp;
 	}
 
-	map_temp.assign(M, 0);
-	sum.assign(N, map_temp);
+	for (int i = 1; i <= N; i++)
+	{
+		for (int j = 1; j <= M; j++)
+		{
+			int mmax = find_max(sum[i - 1][j - 1], sum[i][j - 1], sum[i - 1][j]);
+			sum[i][j] = mmax + map[i][j];
+		}
+	}
 
-	que qq;
-	qq.r = 0;
-	qq.c = 0;
-	qq.cnt = 
-	queue <que> q;
-	
-
+	cout << sum[N][M];
 }
