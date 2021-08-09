@@ -3,50 +3,44 @@
 
 using namespace std;
 
+struct TP {
+	int tt;
+	int pp;
+};
+
 int main()
 {
 	int N, T, P;
 	cin >> N;
 
-	vector <vector <int> > v;
-	vector <int> temp_v;
-	int ans = 0;
+	vector <TP> v;
 
 	for (int i = 0; i < N; i++)
 	{
 		cin >> T >> P;
-		temp_v.push_back(T);
-		temp_v.push_back(P);
-		v.push_back(temp_v);
-		temp_v.clear();
+		TP temp;
+		temp.tt = T;
+		temp.pp = P;
+		v.push_back(temp);
 	}
 
-	for (int i = 0; i < N; i++)
+	vector <int> dp;
+	dp.assign(N + 1, 0);
+
+	for (int i = N - 1; i >= 0; i--)
 	{
-		int now, next;
-		now = i;
-		next = now + v[now][0];
-		int sum = 0;
-		if (next > N)
-			continue;
+		int dodo = 0;
+		if (v[i].tt + i <= N)
+			dodo = v[i].pp + dp[v[i].tt + i];
+		int notdo = dp[i + 1];
 
-		sum = v[now][1];
-		now = next;
-		while (1)
-		{
-			if (now >= N)
-				break;
-			next = now + v[now][0];
-			if (next > N)
-				break;
+		if (dodo > notdo)
+			dp[i] = dodo;
+		else
+			dp[i] = notdo;
 
-			sum += v[now][1];
-			now = next;
-		}
-
-		if (ans < sum)
-			ans = sum;
 	}
 
-	cout << ans;
+	cout << dp[0];
+	
 }
